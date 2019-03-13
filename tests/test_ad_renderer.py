@@ -1,5 +1,5 @@
-from ad_classes import AdClasses
-from ad_renderer import AdRenderer
+from ads.ad_classes import AdClasses
+from ads.ad_renderer import AdRenderer
 from unittest.mock import patch
 
 @patch('cv2.imshow')
