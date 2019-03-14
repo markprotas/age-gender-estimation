@@ -1,4 +1,5 @@
 from pathlib import Path
+import time
 import cv2
 import dlib
 import numpy as np
@@ -6,6 +7,10 @@ import argparse
 from contextlib import contextmanager
 from wide_resnet import WideResNet
 from keras.utils.data_utils import get_file
+
+from ads.identified_face import IdentifiedFace
+from ads.crowd_classifier import CrowdClassifier
+from ads.ad_renderer import AdRenderer
 
 pretrained_model = "https://github.com/yu4u/age-gender-estimation/releases/download/v0.5/weights.28-3.73.hdf5"
 modhash = 'fbe63257a054c1c5466cfd7bf14646d6'
@@ -104,6 +109,7 @@ def main():
         detected = detector(input_img, 1)
         faces = np.empty((len(detected), img_size, img_size, 3))
 
+        age_gender_tuples = []
         if len(detected) > 0:
             for i, d in enumerate(detected):
                 x1, y1, x2, y2, w, h = d.left(), d.top(), d.right() + 1, d.bottom() + 1, d.width(), d.height()
@@ -123,11 +129,14 @@ def main():
 
             # draw results
             for i, d in enumerate(detected):
-                label = "{}, {}".format(int(predicted_ages[i]),
-                                        "M" if predicted_genders[i][0] < 0.5 else "F")
-                draw_label(img, (d.left(), d.top()), label)
+                predicted_age = int(predicted_ages[i])
+                predicted_gender = "M" if predicted_genders[i][0] < 0.5 else "F"
+                age_gender_tuples.append(IdentifiedFace(predicted_gender, predicted_age))
 
-        cv2.imshow("result", img)
+        crowd_classification = CrowdClassifier().classify(age_gender_tuples)
+        AdRenderer().render(crowd_classification)
+        time.sleep(3)
+
         key = cv2.waitKey(-1) if image_dir else cv2.waitKey(30)
 
         if key == 27:  # ESC
