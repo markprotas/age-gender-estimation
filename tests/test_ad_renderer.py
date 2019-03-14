@@ -1,6 +1,8 @@
+from unittest.mock import patch
+
 from ads.ad_classes import AdClasses
 from ads.ad_renderer import AdRenderer
-from unittest.mock import patch
+
 
 @patch('cv2.imshow')
 @patch('cv2.imread')

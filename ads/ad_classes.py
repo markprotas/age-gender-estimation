@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+
 class AdClasses(Enum):
     GENERIC = auto()
     MIDDLE_AGED_MEN = auto()
