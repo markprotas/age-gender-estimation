@@ -10,6 +10,6 @@ class AdClasses(Enum):
         if self == AdClasses.GENERIC:
             return "soccer_ball.jpg"
         elif self == AdClasses.MIDDLE_AGED_MEN:
-            return "beers.jpg"
+            return "Jeans_for_men.jpg"
         elif self == AdClasses.FAMILIES:
             return "games.jpg"
